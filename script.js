@@ -102,7 +102,7 @@ function drawHead(x, y) {
     ctx.save();
 
     ctx.shadowColor = "#00ffee";
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = canvas.width > 550 ? 5 : 8;
 
     ctx.beginPath();
     ctx.arc(x + box / 2, y + box / 2, 9, 0, Math.PI * 2);
