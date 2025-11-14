@@ -7,7 +7,16 @@ let speed = 180;
 let gameStarted = false;
 
 function resizeCanvas() {
-    let size = window.innerWidth < 700 ? Math.floor(window.innerWidth * 0.90) : 600;
+    let size;
+
+    if (window.innerWidth < 700) {
+        size = Math.floor(window.innerWidth * 0.90);
+    } else {
+        size = 600;
+    }
+
+    size = size - (size % box);
+
     canvas.width = size;
     canvas.height = size;
 }
@@ -91,29 +100,28 @@ function drawCircle(x, y, color, r = 7) {
 
 function drawHead(x, y) {
     ctx.save();
+
     ctx.shadowColor = "#00ffee";
-    ctx.shadowBlur = 14;
+    ctx.shadowBlur = 8;
 
     ctx.beginPath();
     ctx.arc(x + box / 2, y + box / 2, 9, 0, Math.PI * 2);
     ctx.fillStyle = "#00ffcc";
     ctx.fill();
 
-    ctx.shadowBlur = 0;
+    ctx.restore();
 
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.arc(x + box/2 + 4, y + box/2 - 3, 2.5, 0, Math.PI * 2);
-    ctx.arc(x + box/2 + 4, y + box/2 + 3, 2.5, 0, Math.PI * 2);
+    ctx.arc(x + box/2 + 4, y + box/2 - 3, 2.2, 0, Math.PI * 2);
+    ctx.arc(x + box/2 + 4, y + box/2 + 3, 2.2, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "#000";
     ctx.beginPath();
-    ctx.arc(x + box/2 + 4, y + box/2 - 3, 1.2, 0, Math.PI * 2);
-    ctx.arc(x + box/2 + 4, y + box/2 + 3, 1.2, 0, Math.PI * 2);
+    ctx.arc(x + box/2 + 4, y + box/2 - 3, 1, 0, Math.PI * 2);
+    ctx.arc(x + box/2 + 4, y + box/2 + 3, 1, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.restore();
 }
 
 function updateSpeed() {
@@ -173,3 +181,4 @@ function gameOver() {
 }
 
 document.getElementById("restartBtn").onclick = () => location.reload();
+
