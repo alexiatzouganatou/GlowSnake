@@ -5,19 +5,13 @@ const box = 20;
 let snake, direction, food, score, game;
 let speed = 180;
 let gameStarted = false;
+
+
 function resizeCanvas() {
-    let size;
-
-    if (window.innerWidth < 700) {
-        size = Math.floor(window.innerWidth * 0.90);
-    } else {
-        size = 600;
-    }
-
+    let size = window.innerWidth < 700 ? Math.floor(window.innerWidth * 0.90) : 600;
     canvas.width = size;
     canvas.height = size;
 }
-
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
@@ -42,6 +36,7 @@ function init() {
     score = 0;
     document.getElementById("score").textContent = score;
 }
+
 
 function randomFood() {
     const cells = Math.floor(canvas.width / box);
@@ -70,11 +65,8 @@ function enableSwipeControls() {
     });
 
     canvas.addEventListener("touchend", e => {
-        let endX = e.changedTouches[0].clientX;
-        let endY = e.changedTouches[0].clientY;
-
-        let dx = endX - startX;
-        let dy = endY - startY;
+        let dx = e.changedTouches[0].clientX - startX;
+        let dy = e.changedTouches[0].clientY - startY;
 
         if (Math.abs(dx) > Math.abs(dy)) {
             if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
@@ -85,6 +77,18 @@ function enableSwipeControls() {
         }
     });
 }
+
+
+document.querySelectorAll(".arrow-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const dir = btn.getAttribute("data-dir");
+
+        if (dir === "UP" && direction !== "DOWN") direction = "UP";
+        if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
+        if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+        if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+    });
+});
 
 
 function drawCircle(x, y, color, r = 7) {
@@ -111,20 +115,6 @@ function drawHead(x, y) {
     ctx.fillStyle = "#00ffcc";
     ctx.fill();
 
-    /* Eyes */
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(x + box/2 + 4, y + box/2 - 3, 2, 0, Math.PI * 2);
-    ctx.arc(x + box/2 + 4, y + box/2 + 3, 2, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.arc(x + box/2 + 4, y + box/2 - 3, 1, 0, Math.PI * 2);
-    ctx.arc(x + box/2 + 4, y + box/2 + 3, 1, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.restore();
 }
 
@@ -139,6 +129,7 @@ function updateSpeed() {
     clearInterval(game);
     game = setInterval(draw, speed);
 }
+
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -184,5 +175,4 @@ function gameOver() {
     document.getElementById("finalScore").textContent = score;
     document.getElementById("gameOverScreen").style.display = "block";
 }
-
 document.getElementById("restartBtn").onclick = () => location.reload();
