@@ -6,7 +6,6 @@ let snake, direction, food, score, game;
 let speed = 180;
 let gameStarted = false;
 
-
 function resizeCanvas() {
     let size = window.innerWidth < 700 ? Math.floor(window.innerWidth * 0.90) : 600;
     canvas.width = size;
@@ -15,19 +14,16 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-
 document.getElementById("playBtn").onclick = startGame;
 
 function startGame() {
     gameStarted = true;
     document.getElementById("startScreen").style.display = "none";
     document.querySelector(".game-container").style.display = "flex";
-
     init();
     game = setInterval(draw, speed);
     enableSwipeControls();
 }
-
 
 function init() {
     snake = [{ x: 10 * box, y: 10 * box }];
@@ -37,7 +33,6 @@ function init() {
     document.getElementById("score").textContent = score;
 }
 
-
 function randomFood() {
     const cells = Math.floor(canvas.width / box);
     return {
@@ -46,10 +41,8 @@ function randomFood() {
     };
 }
 
-
 document.addEventListener("keydown", e => {
     if (!gameStarted) return;
-
     if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
     if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
     if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
@@ -58,16 +51,13 @@ document.addEventListener("keydown", e => {
 
 function enableSwipeControls() {
     let startX, startY;
-
     canvas.addEventListener("touchstart", e => {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
     });
-
     canvas.addEventListener("touchend", e => {
         let dx = e.changedTouches[0].clientX - startX;
         let dy = e.changedTouches[0].clientY - startY;
-
         if (Math.abs(dx) > Math.abs(dy)) {
             if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
             if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
@@ -78,11 +68,9 @@ function enableSwipeControls() {
     });
 }
 
-
 document.querySelectorAll(".arrow-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         const dir = btn.getAttribute("data-dir");
-
         if (dir === "UP" && direction !== "DOWN") direction = "UP";
         if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
         if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
@@ -90,34 +78,43 @@ document.querySelectorAll(".arrow-btn").forEach(btn => {
     });
 });
 
-
 function drawCircle(x, y, color, r = 7) {
     ctx.save();
     ctx.shadowColor = color;
-    ctx.shadowBlur = 12;
-
+    ctx.shadowBlur = 10;
     ctx.beginPath();
-    ctx.arc(x + box/2, y + box/2, r, 0, Math.PI * 2);
+    ctx.arc(x + box / 2, y + box / 2, r, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
-
     ctx.restore();
 }
-
 
 function drawHead(x, y) {
     ctx.save();
     ctx.shadowColor = "#00ffee";
-    ctx.shadowBlur = 20;
+    ctx.shadowBlur = 14;
 
     ctx.beginPath();
-    ctx.arc(x + box/2, y + box/2, 9, 0, Math.PI * 2);
+    ctx.arc(x + box / 2, y + box / 2, 9, 0, Math.PI * 2);
     ctx.fillStyle = "#00ffcc";
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(x + box/2 + 4, y + box/2 - 3, 2.5, 0, Math.PI * 2);
+    ctx.arc(x + box/2 + 4, y + box/2 + 3, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#000000";
+    ctx.beginPath();
+    ctx.arc(x + box/2 + 4, y + box/2 - 3, 1.2, 0, Math.PI * 2);
+    ctx.arc(x + box/2 + 4, y + box/2 + 3, 1.2, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
 }
-
 
 function updateSpeed() {
     if (score >= 20) speed = 95;
@@ -129,7 +126,6 @@ function updateSpeed() {
     clearInterval(game);
     game = setInterval(draw, speed);
 }
-
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -175,4 +171,5 @@ function gameOver() {
     document.getElementById("finalScore").textContent = score;
     document.getElementById("gameOverScreen").style.display = "block";
 }
+
 document.getElementById("restartBtn").onclick = () => location.reload();
