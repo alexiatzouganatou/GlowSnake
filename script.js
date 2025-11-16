@@ -151,7 +151,7 @@ document.getElementById("restartBtn").onclick = () => {
     requestAnimationFrame(gameLoop);
 };
 
-/* KEYBOARD */
+
 document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowUp" && vy !== 1) { vx = 0; vy = -1; }
     if (e.key === "ArrowDown" && vy !== -1) { vx = 0; vy = 1; }
@@ -159,7 +159,6 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" && vx !== -1) { vx = 1; vy = 0; }
 });
 
-/* MOBILE TOUCH FIX (iPhone + Android SAFE) */
 function handleDirection(dir) {
     if (dir === "UP" && vy !== 1) { vx = 0; vy = -1; }
     if (dir === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
@@ -168,13 +167,20 @@ function handleDirection(dir) {
 }
 
 document.querySelectorAll(".arrow-btn").forEach(btn => {
-    btn.addEventListener("touchstart", (e) => {
+
+    btn.style.touchAction = "none";
+    btn.style.userSelect = "none";
+    btn.style.webkitUserSelect = "none";
+    btn.style.webkitTapHighlightColor = "transparent";
+
+    btn.addEventListener("pointerdown", (e) => {
         e.preventDefault();
         const dir = btn.getAttribute("data-dir");
         handleDirection(dir);
-    }, { passive: false });
+    });
 
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
         const dir = btn.getAttribute("data-dir");
         handleDirection(dir);
     });
