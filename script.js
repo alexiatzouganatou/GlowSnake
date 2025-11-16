@@ -33,6 +33,7 @@ let glow = mobile ? 4 : 9;
 function resetGame() {
     const startX = Math.floor(cols / 2);
     const startY = Math.floor(rows / 2);
+
     snake = [{ x: startX, y: startY }];
     vx = 1;
     vy = 0;
@@ -150,6 +151,7 @@ document.getElementById("restartBtn").onclick = () => {
     requestAnimationFrame(gameLoop);
 };
 
+/* KEYBOARD */
 document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowUp" && vy !== 1) { vx = 0; vy = -1; }
     if (e.key === "ArrowDown" && vy !== -1) { vx = 0; vy = 1; }
@@ -157,14 +159,23 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" && vx !== -1) { vx = 1; vy = 0; }
 });
 
+/* MOBILE TOUCH FIX (iPhone + Android SAFE) */
+function handleDirection(dir) {
+    if (dir === "UP" && vy !== 1) { vx = 0; vy = -1; }
+    if (dir === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
+    if (dir === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
+    if (dir === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
+}
+
 document.querySelectorAll(".arrow-btn").forEach(btn => {
     btn.addEventListener("touchstart", (e) => {
         e.preventDefault();
-        const dir = btn.dataset.dir;
-
-        if (dir === "UP" && vy !== 1) { vx = 0; vy = -1; }
-        if (dir === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
-        if (dir === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
-        if (dir === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
+        const dir = btn.getAttribute("data-dir");
+        handleDirection(dir);
     }, { passive: false });
+
+    btn.addEventListener("click", () => {
+        const dir = btn.getAttribute("data-dir");
+        handleDirection(dir);
+    });
 });
