@@ -159,29 +159,34 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" && vx !== -1) { vx = 1; vy = 0; }
 });
 
+
 function handleDirection(dir) {
-    if (dir === "UP" && vy !== 1) { vx = 0; vy = -1; }
-    if (dir === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
+    if (dir === "UP" && vy !== 1)  { vx = 0; vy = -1; }
+    if (dir === "DOWN" && vy !== -1){ vx = 0; vy = 1; }
     if (dir === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
-    if (dir === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
+    if (dir === "RIGHT" && vx !== -1){ vx = 1; vy = 0; }
 }
 
 document.querySelectorAll(".arrow-btn").forEach(btn => {
 
+    const dir = btn.getAttribute("data-dir");
+
     btn.style.touchAction = "none";
-    btn.style.userSelect = "none";
-    btn.style.webkitUserSelect = "none";
     btn.style.webkitTapHighlightColor = "transparent";
+    btn.style.userSelect = "none";
 
     btn.addEventListener("pointerdown", (e) => {
         e.preventDefault();
-        const dir = btn.getAttribute("data-dir");
         handleDirection(dir);
     });
 
+    btn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        handleDirection(dir);
+    }, { passive: false });
+
     btn.addEventListener("click", (e) => {
         e.preventDefault();
-        const dir = btn.getAttribute("data-dir");
         handleDirection(dir);
     });
 });

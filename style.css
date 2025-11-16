@@ -10,7 +10,7 @@ body {
     text-align: center;
 }
 
-
+/* START SCREEN */
 .start-screen {
     position: absolute;
     width: 100%;
@@ -89,7 +89,7 @@ canvas {
     max-height: 420px;
 }
 
-
+/* GAME OVER */
 .game-over {
     position: absolute;
     top: 50%; 
@@ -104,12 +104,6 @@ canvas {
     z-index: 20;
 }
 
-.game-over h2 {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
 #restartBtn {
     padding: 12px 26px;
     border-radius: 12px;
@@ -119,13 +113,8 @@ canvas {
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
-}
-#restartBtn:hover {
-    transform: scale(1.05);
 }
 
-/* MOBILE CONTROLS */
 .mobile-controls {
     margin-top: 24px;
     display: none;
@@ -148,30 +137,26 @@ canvas {
     background: transparent;
     color: #00ffc8;
     border-radius: 18px;
-    box-shadow: 0 0 12px rgba(0,255,200,0.4);
     cursor: pointer;
-    transition: 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.arrow-btn:active {
-    background: rgba(0,255,200,0.18);
-    transform: scale(0.92);
-    box-shadow: 0 0 20px rgba(0,255,200,0.6);
-}
 
 @media (hover: none) and (pointer: coarse) {
-    .mobile-controls {
-        display: flex;
-    }
+    .mobile-controls { display: flex; }
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .mobile-controls {
-        display: none;
-    }
+    .mobile-controls { display: none; }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@supports (-webkit-touch-callout: none) {
+    .arrow-btn {
+        transition: none !important;
+        box-shadow: none !important;
+    }
 }
