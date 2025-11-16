@@ -9,7 +9,7 @@ body {
     user-select: none;
 }
 
-/* START */
+/* START SCREEN */
 .start-screen {
     position: absolute;
     width: 100%;
@@ -28,14 +28,15 @@ body {
 }
 
 .play-btn {
-    margin-top: 15px;
+    margin-top: 18px;
     padding: 14px 36px;
     font-size: 20px;
     border-radius: 14px;
-    border: none;
-    background: #00c7a5;
     color: white;
+    border: none;
     cursor: pointer;
+    background: linear-gradient(135deg, #00e5c2, #00c7a5);
+    box-shadow: 0 6px 20px rgba(0, 200, 170, 0.35);
 }
 
 /* GAME */
@@ -47,18 +48,16 @@ body {
 }
 
 canvas {
-    margin-top: 15px;
-    background: white;
+     background: white;
     border-radius: 14px;
-    border: 2px solid #ddd;
-    width: 90vw;
-    height: 90vw;
-    max-width: 420px;
-    max-height: 420px;
+    border: 2px solid #e0e0e0;
+    width: 420px !important;
+    height: 420px !important;
 }
 
+/* SCORE BOX */
 .score-box {
-    margin-top: 12px;
+    margin-top: 14px;
     font-size: 20px;
     font-weight: 600;
     background: white;
@@ -71,37 +70,52 @@ canvas {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    padding: 30px;
     background: white;
-    border-radius: 16px;
+    padding: 40px 50px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     display: none;
 }
 
-/* MOBILE BUTTONS */
+#restartBtn {
+    margin-top: 14px;
+    padding: 14px 32px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #00e5c2, #00c7a5);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* MOBILE CONTROLS */
 .mobile-controls {
-    margin-top: 18px;
+    margin-top: 20px;
     display: none;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .mobile-controls .row {
     display: flex;
-    gap: 14px;
+    gap: 18px;
 }
 
 .arrow-btn {
     width: 70px;
     height: 70px;
-    font-size: 30px;
+    font-size: 32px;
     border-radius: 18px;
     border: 2px solid #00c7a5;
     background: #e9fffa;
     color: #00c7a5;
 }
 
-/* SHOW 100% ON ALL PHONES */
+/* ALWAYS SHOW ON MOBILE */
 @media (max-width: 900px) {
     .mobile-controls {
         display: flex !important;
