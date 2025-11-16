@@ -9,6 +9,7 @@
 
 <body>
 
+ 
     <div id="startScreen" class="start-screen">
         
         <div class="logo-container">
@@ -36,12 +37,15 @@
         <button id="playBtn" class="play-btn">Play</button>
     </div>
 
-
+    
     <div class="game-container">
         <canvas id="gameCanvas"></canvas>
-        <div class="score-box">Score: <span id="score">0</span></div>
 
-       
+        <div class="score-box">
+            Score: <span id="score">0</span><br>
+            High Score: <span id="highScore">0</span>
+        </div>
+
         <div class="mobile-controls">
             <div class="row">
                 <button class="arrow-btn" data-dir="UP">▲</button>
@@ -61,6 +65,6 @@
         <button id="restartBtn">Play Again</button>
     </div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
