@@ -10,7 +10,7 @@ body {
     text-align: center;
 }
 
-/* START SCREEN */
+
 .start-screen {
     position: absolute;
     width: 100%;
@@ -59,6 +59,7 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
+
 .game-container {
     display: none;
     flex-direction: column;
@@ -89,7 +90,6 @@ canvas {
     max-height: 420px;
 }
 
-/* GAME OVER */
 .game-over {
     position: absolute;
     top: 50%; 
@@ -143,20 +143,22 @@ canvas {
     align-items: center;
 }
 
-
-@media (hover: none) and (pointer: coarse) {
-    .mobile-controls { display: flex; }
+@media (max-width: 900px) {
+    .mobile-controls {
+        display: flex !important;
+    }
 }
 
-@media (hover: hover) and (pointer: fine) {
-    .mobile-controls { display: none; }
-}
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 @supports (-webkit-touch-callout: none) {
     .arrow-btn {
         transition: none !important;
         box-shadow: none !important;
     }
+}
+
+
+@keyframes fadeIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
 }
