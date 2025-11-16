@@ -1,18 +1,23 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// FIX: Proper canvas size
+canvas.width = 420;
+canvas.height = 420;
+
 let tile = 20;
-let speed = 180;
+let grid = canvas.width / tile;
+
+let speed = 150;
 let snake = [{ x: 5, y: 5 }];
 let vx = 1, vy = 0;
 
 let food = { x: 10, y: 10 };
 let score = 0;
-let highScore = localStorage.getItem("glowHigh") || 0;
 
+let highScore = localStorage.getItem("glowHigh") || 0;
 document.getElementById("highScore").textContent = highScore;
 
-// Start game
 document.getElementById("playBtn").onclick = () => {
     document.getElementById("startScreen").style.display = "none";
     document.querySelector(".game-container").style.display = "flex";
@@ -25,21 +30,19 @@ function gameLoop() {
         y: snake[0].y + vy
     };
 
-    // collision walls
-    if (head.x < 0 || head.x >= 21 || head.y < 0 || head.y >= 21) {
+    // wall collision
+    if (head.x < 0 || head.x >= grid || head.y < 0 || head.y >= grid) {
         return gameOver();
     }
 
-    // collision body
+    // body collision
     for (let p of snake) {
-        if (p.x === head.x && p.y === head.y) {
-            return gameOver();
-        }
+        if (p.x === head.x && p.y === head.y) return gameOver();
     }
 
     snake.unshift(head);
 
-    // eat
+    // eating
     if (head.x === food.x && head.y === food.y) {
         score++;
         document.getElementById("score").textContent = score;
@@ -56,7 +59,6 @@ function gameLoop() {
     }
 
     draw();
-
     setTimeout(gameLoop, speed);
 }
 
@@ -89,8 +91,8 @@ function draw() {
 }
 
 function placeFood() {
-    food.x = Math.floor(Math.random() * 21);
-    food.y = Math.floor(Math.random() * 21);
+    food.x = Math.floor(Math.random() * grid);
+    food.y = Math.floor(Math.random() * grid);
 }
 
 function gameOver() {
@@ -98,11 +100,9 @@ function gameOver() {
     document.getElementById("gameOverScreen").style.display = "block";
 }
 
-document.getElementById("restartBtn").onclick = () => {
-    location.reload();
-};
+document.getElementById("restartBtn").onclick = () => location.reload();
 
-// Keyboard controls
+// keyboard
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowUp" && vy !== 1) { vx = 0; vy = -1; }
     if (e.key === "ArrowDown" && vy !== -1) { vx = 0; vy = 1; }
@@ -110,13 +110,13 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowRight" && vx !== -1) { vx = 1; vy = 0; }
 });
 
-// Mobile
+// mobile
 document.querySelectorAll(".arrow-btn").forEach(btn => {
     btn.onclick = () => {
-        let dir = btn.dataset.dir;
-        if (dir === "UP" && vy !== 1) { vx = 0; vy = -1; }
-        if (dir === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
-        if (dir === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
-        if (dir === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
+        let d = btn.dataset.dir;
+        if (d === "UP" && vy !== 1) { vx = 0; vy = -1; }
+        if (d === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
+        if (d === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
+        if (d === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
     };
 });
