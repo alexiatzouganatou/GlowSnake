@@ -1,58 +1,64 @@
-// ===== CANVAS SETUP =====
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// Real size for drawing
-let tileSize = 20;
-let gridCount = 21;
+// ---------- FIX CANVAS FOR ALL DEVICES (PC / iPhone / Android) ----------
+function resizeCanvas() {
+    let size = Math.min(window.innerWidth * 0.9, 420); 
+    canvas.style.width = size + "px";
+    canvas.style.height = size + "px";
 
-canvas.width = tileSize * gridCount;
-canvas.height = tileSize * gridCount;
+    canvas.width = size;
+    canvas.height = size;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-// ===== GAME VARIABLES =====
-let snake = [{ x: 5, y: 5 }];
+// GRID SIZE
+const grid = 21;
+let tile = canvas.width / grid;
+
+// Snake
+let snake = [{ x: 10, y: 10 }];
 let vx = 1, vy = 0;
-let food = { x: 10, y: 10 };
-let score = 0;
 
+// Food
+let food = { x: 5, y: 5 };
+
+// Score
+let score = 0;
 let highScore = localStorage.getItem("glowHigh") || 0;
 document.getElementById("highScore").textContent = highScore;
 
-let speed = 160;
-let gameRunning = false;
+let running = false;
 
-// ===== START GAME =====
+// START
 document.getElementById("playBtn").onclick = () => {
     document.getElementById("startScreen").style.display = "none";
     document.querySelector(".game-container").style.display = "flex";
-    gameRunning = true;
+    running = true;
     gameLoop();
 };
 
-// ===== MAIN GAME LOOP =====
+// GAME LOOP
 function gameLoop() {
-    if (!gameRunning) return;
+    if (!running) return;
+
+    tile = canvas.width / grid; // recalc on resize
 
     let head = {
         x: snake[0].x + vx,
         y: snake[0].y + vy
     };
 
-    // Wall collision
-    if (head.x < 0 || head.x >= gridCount || head.y < 0 || head.y >= gridCount) {
-        return gameOver();
-    }
+    // WALL COLLISION
+    if (head.x < 0 || head.x >= grid || head.y < 0 || head.y >= grid) return gameOver();
 
-    // Body collision
-    for (let p of snake) {
-        if (p.x === head.x && p.y === head.y) {
-            return gameOver();
-        }
-    }
+    // BODY COLLISION
+    if (snake.some(p => p.x === head.x && p.y === head.y)) return gameOver();
 
     snake.unshift(head);
 
-    // Eating food
+    // EAT
     if (head.x === food.x && head.y === food.y) {
         score++;
         document.getElementById("score").textContent = score;
@@ -69,100 +75,72 @@ function gameLoop() {
     }
 
     draw();
-    setTimeout(gameLoop, speed);
+    setTimeout(gameLoop, 150);
 }
 
-// ===== DRAW EVERYTHING =====
+// DRAW
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // === FOOD (Bright Blue) ===
-    ctx.fillStyle = "#00c7ff";
+    // FOOD
+    ctx.fillStyle = "#00e0c6";
     ctx.beginPath();
     ctx.arc(
-        food.x * tileSize + tileSize / 2,
-        food.y * tileSize + tileSize / 2,
-        tileSize / 2,
+        food.x * tile + tile / 2,
+        food.y * tile + tile / 2,
+        tile * 0.4,
         0, Math.PI * 2
     );
     ctx.fill();
 
-    // === SNAKE ===
-    for (let i = 0; i < snake.length; i++) {
-        let s = snake[i];
-
-        // Blue snake
-        ctx.fillStyle = i === 0 ? "#0077cc" : "#0096ff";
+    // SNAKE
+    snake.forEach((p, i) => {
+        ctx.fillStyle = i === 0 ? "#006DFF" : "#0098FF";
 
         ctx.beginPath();
         ctx.arc(
-            s.x * tileSize + tileSize / 2,
-            s.y * tileSize + tileSize / 2,
-            tileSize / 2,
+            p.x * tile + tile / 2,
+            p.y * tile + tile / 2,
+            tile * 0.45,
             0, Math.PI * 2
         );
         ctx.fill();
 
-        // ==== EYES FOR HEAD ====
+        // EYES
         if (i === 0) {
-            // White eyes
             ctx.fillStyle = "white";
-
             ctx.beginPath();
-            ctx.arc(
-                s.x * tileSize + tileSize * 0.35,
-                s.y * tileSize + tileSize * 0.30,
-                tileSize * 0.12,
-                0, Math.PI * 2
-            );
-            ctx.arc(
-                s.x * tileSize + tileSize * 0.65,
-                s.y * tileSize + tileSize * 0.30,
-                tileSize * 0.12,
-                0, Math.PI * 2
-            );
+            ctx.arc(p.x * tile + tile * 0.30, p.y * tile + tile * 0.30, tile * 0.18, 0, Math.PI * 2);
+            ctx.arc(p.x * tile + tile * 0.70, p.y * tile + tile * 0.30, tile * 0.18, 0, Math.PI * 2);
             ctx.fill();
 
-            // Black pupils
             ctx.fillStyle = "black";
-
             ctx.beginPath();
-            ctx.arc(
-                s.x * tileSize + tileSize * 0.35,
-                s.y * tileSize + tileSize * 0.30,
-                tileSize * 0.06,
-                0, Math.PI * 2
-            );
-            ctx.arc(
-                s.x * tileSize + tileSize * 0.65,
-                s.y * tileSize + tileSize * 0.30,
-                tileSize * 0.06,
-                0, Math.PI * 2
-            );
+            ctx.arc(p.x * tile + tile * 0.30, p.y * tile + tile * 0.30, tile * 0.08, 0, Math.PI * 2);
+            ctx.arc(p.x * tile + tile * 0.70, p.y * tile + tile * 0.30, tile * 0.08, 0, Math.PI * 2);
             ctx.fill();
         }
-    }
+    });
 }
 
-// ===== RANDOM FOOD =====
+// PLACE FOOD
 function placeFood() {
-    food.x = Math.floor(Math.random() * gridCount);
-    food.y = Math.floor(Math.random() * gridCount);
+    food.x = Math.floor(Math.random() * grid);
+    food.y = Math.floor(Math.random() * grid);
 }
 
-// ===== GAME OVER =====
+// GAME OVER
 function gameOver() {
-    gameRunning = false;
+    running = false;
     document.getElementById("finalScore").textContent = score;
     document.getElementById("gameOverScreen").style.display = "block";
 }
 
-// ===== RESTART =====
-document.getElementById("restartBtn").onclick = () => {
-    location.reload();
-};
+// RESTART
+document.getElementById("restartBtn").onclick = () => location.reload();
 
-// ===== KEYBOARD CONTROLS =====
+
+// KEYBOARD
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowUp" && vy !== 1) { vx = 0; vy = -1; }
     if (e.key === "ArrowDown" && vy !== -1) { vx = 0; vy = 1; }
@@ -170,14 +148,14 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowRight" && vx !== -1) { vx = 1; vy = 0; }
 });
 
-// ===== MOBILE BUTTONS =====
+// MOBILE CONTROLS
 document.querySelectorAll(".arrow-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        let dir = btn.dataset.dir;
+    btn.addEventListener("touchstart", () => {
+        let d = btn.dataset.dir;
 
-        if (dir === "UP" && vy !== 1) { vx = 0; vy = -1; }
-        if (dir === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
-        if (dir === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
-        if (dir === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
+        if (d === "UP" && vy !== 1) { vx = 0; vy = -1; }
+        if (d === "DOWN" && vy !== -1) { vx = 0; vy = 1; }
+        if (d === "LEFT" && vx !== 1) { vx = -1; vy = 0; }
+        if (d === "RIGHT" && vx !== -1) { vx = 1; vy = 0; }
     });
 });
